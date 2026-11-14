@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adax-direct-tools"
+version = "0.1.0"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["Adax-local==0.3.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+adax-direct = "adax_direct_tools.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+asyncio_mode = "auto"

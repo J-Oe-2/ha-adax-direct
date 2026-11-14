@@ -1,0 +1,40 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Adax heater (local, IP + token)",
+        "description": "Address and access token of one heater, as stored by `adax-direct pair` (see the README). The heater must already be on your Wi-Fi.",
+        "data": {
+          "host": "IP address or host (host:port for a non-standard port)",
+          "token": "Access token",
+          "device_id": "Adax device id",
+          "name": "Name (e.g. Living room)",
+          "rated_power_w": "Rated power (W)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The heater did not answer a status request with this address and token."
+    },
+    "abort": {
+      "already_configured": "This heater is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Adax heater options",
+        "data": {
+          "host": "IP address or host",
+          "token": "Access token",
+          "rated_power_w": "Rated power (W)",
+          "duty_base": "Duty at target (0-1, share of time on when room = target)",
+          "duty_slope": "Duty per K below target (0-5)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The heater did not answer a status request with this address and token."
+    }
+  }
+}

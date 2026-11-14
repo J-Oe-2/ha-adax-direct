@@ -1,0 +1,12 @@
+{
+  "domain": "adax_direct",
+  "name": "Adax Direct (unofficial)",
+  "codeowners": ["@J-Oe-2"],
+  "config_flow": true,
+  "documentation": "https://github.com/J-Oe-2/ha-adax-direct",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/J-Oe-2/ha-adax-direct/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
