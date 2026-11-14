@@ -1,7 +1,12 @@
 {
   "domain": "adax_direct",
   "name": "Adax Direct (unofficial)",
-  "codeowners": ["@J-Oe-2"],
+  "categories": [
+    "climate.thermostats_heating"
+  ],
+  "codeowners": [
+    "@J-Oe-2"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/J-Oe-2/ha-adax-direct",
   "integration_type": "device",
