@@ -88,7 +88,7 @@ It runs the integration's config flow over the REST API and prints the entry id 
 | Access token | setup + options | text | — | as stored by `adax-direct pair` |
 | Adax device id | setup | text | — | `unique_id` from the record; the entry's unique id |
 | Name | setup | text | — | device name; entity ids derive from it |
-| Rated power (W) | setup + options | 100–3000 | 1000 | measured wattage at your mains |
+| Rated power (W) | setup + options | 100–3000 | 1000 | measured wattage at your mains (a Clea H 10 KWT measured 965–998 W at 230 V, see Measured behaviour) |
 | Duty at target (`duty_base`) | options | 0–1 | 0.23 | share of time on when room = target |
 | Duty per K below target (`duty_slope`) | options | 0–5 | 0.30 | added on-share per K the room is below target |
 
@@ -97,6 +97,16 @@ Fixed behaviours: poll every 60 s; entities become unavailable only after 5 fail
 ## Energy model and accuracy
 
 The heaters report 0 W locally. Power is modelled: rated power × duty, duty = clamp(duty_base + duty_slope × (target − room) [K], 0, 1). With the default curve (0.23 / 0.30) and a measured wattage, the energy was within ±10 % per hour-long run on four plug-measured Gen2 heaters (−10.1 %, −3.5 %, −1.4 %, +1.4 %); shorter windows deviate more (up to +14 % over 30 min; near the setpoint, where little energy flows, much more in relative terms). Resistive elements draw power ∝ V²: the label wattage applies at the label voltage, so measure at your mains voltage or correct by (V / V_label)².
+
+## Measured behaviour
+
+Measurements on one installation (8 heaters: Clea H 10 KWT ×6, Clea H 12 KWT ×1, Neo L 14 WT ×1). Use them as typical values, not as specifications.
+
+**Wattage.** Measured with a plug power meter while the element was warm, and normalised to 230 V from the measured resistance (P = V² / R): five Clea H 10 KWT (label 1000 W) delivered 965–998 W at 230 V (53.0–54.8 Ω, mean ≈ 982 W); at the actual supply of 223–230 V that was 926–988 W. One Clea H 12 KWT (label 1200 W) delivered ≈ 1133 W at 230 V. The rated-power default stays the label value; enter your measured value for better energy figures. A whole-house meter reproduced a plug-measured step within ≈ 1 %, at night with little other load.
+
+**The heater's own temperature reading is biased low while idle.** Against a reference probe (three probes agreeing within ±0.03 K) placed on top of the control unit, sticking out to the side, the heaters read 1.0 to 1.9 K too low while idle (mean 1.5 K). The spread between heaters is up to 0.9 K, so a correction has to be per heater, not one constant. While heating, the reading converges on the reference within about 15 minutes of continuous heating (for example −1.9 K → ±0.15 K): heating ventilates the sensor with room air, and it does not read high. After switch-off the reading stays right for about 10 minutes, then drifts low with a time constant of about 30 minutes (fit on one heater: Δ ≈ −1.6 · (1 − e^(−(t − 10) / 30)) K, t in minutes). A rule of "no correction while heating and for 45 minutes afterwards, then the idle offset" stays within ±1 K of the reference (at worst 0.5 K too warm just after the 45 minutes).
+
+**How to measure the bias yourself.** Compare only after at least 20 minutes of settling. Settled means the difference (heater − reference) stops changing, i.e. less than 0.2 K between consecutive 10-minute means, not that the reference stops changing.
 
 ## Calibrate with a smart plug
 

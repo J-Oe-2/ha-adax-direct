@@ -22,6 +22,7 @@ README_HEADINGS = [
     "## Add the heater to Home Assistant",
     "## Options",
     "## Energy model and accuracy",
+    "## Measured behaviour",
     "## Calibrate with a smart plug",
     "## Tested on",
     "## Local API (for developers)",
