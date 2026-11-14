@@ -17,14 +17,21 @@ from .const import (
     CONF_HOST,
     CONF_DUTY_BASE,
     CONF_DUTY_SLOPE,
+    CONF_IDLE_OFFSET_K,
     CONF_NAME,
     CONF_RATED_POWER_W,
+    CONF_SETTLE_MIN,
     CONF_TOKEN,
     DEFAULT_DUTY_BASE,
     DEFAULT_DUTY_SLOPE,
+    DEFAULT_IDLE_OFFSET_K,
+    DEFAULT_SETTLE_MIN,
     DOMAIN,
     MAX_DUTY_SLOPE,
+    MAX_IDLE_OFFSET_K,
     MAX_RATED_POWER_W,
+    MAX_SETTLE_MIN,
+    MIN_IDLE_OFFSET_K,
     MIN_RATED_POWER_W,
 )
 
@@ -32,6 +39,8 @@ _TOKEN = TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD))
 _POWER = vol.All(vol.Coerce(int), vol.Range(min=MIN_RATED_POWER_W, max=MAX_RATED_POWER_W))
 _DUTY_BASE = vol.All(vol.Coerce(float), vol.Range(min=0.0, max=1.0))
 _DUTY_SLOPE = vol.All(vol.Coerce(float), vol.Range(min=0.0, max=MAX_DUTY_SLOPE))
+_IDLE_OFFSET = vol.All(vol.Coerce(float), vol.Range(min=MIN_IDLE_OFFSET_K, max=MAX_IDLE_OFFSET_K))
+_SETTLE = vol.All(vol.Coerce(int), vol.Range(min=0, max=MAX_SETTLE_MIN))
 
 
 async def _can_connect(hass: Any, host: str, token: str) -> bool:
@@ -80,7 +89,7 @@ class AdaxDirectConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class AdaxDirectOptionsFlow(OptionsFlow):
-    """Host, token, rated power, the two duty-model parameters; the entry reloads afterwards."""
+    """Host, token, rated power, the two duty-model parameters, the idle offset and its settle time; the entry reloads afterwards."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         entry = self.config_entry
@@ -95,6 +104,8 @@ class AdaxDirectOptionsFlow(OptionsFlow):
                         CONF_RATED_POWER_W: user_input[CONF_RATED_POWER_W],
                         CONF_DUTY_BASE: user_input[CONF_DUTY_BASE],
                         CONF_DUTY_SLOPE: user_input[CONF_DUTY_SLOPE],
+                        CONF_IDLE_OFFSET_K: user_input[CONF_IDLE_OFFSET_K],
+                        CONF_SETTLE_MIN: user_input[CONF_SETTLE_MIN],
                     }
                 )
             errors["base"] = "cannot_connect"
@@ -105,6 +116,8 @@ class AdaxDirectOptionsFlow(OptionsFlow):
                 vol.Required(CONF_RATED_POWER_W): _POWER,
                 vol.Required(CONF_DUTY_BASE, default=DEFAULT_DUTY_BASE): _DUTY_BASE,
                 vol.Required(CONF_DUTY_SLOPE, default=DEFAULT_DUTY_SLOPE): _DUTY_SLOPE,
+                vol.Required(CONF_IDLE_OFFSET_K, default=DEFAULT_IDLE_OFFSET_K): _IDLE_OFFSET,
+                vol.Required(CONF_SETTLE_MIN, default=DEFAULT_SETTLE_MIN): _SETTLE,
             }
         )
         current = user_input or {
@@ -112,6 +125,8 @@ class AdaxDirectOptionsFlow(OptionsFlow):
             CONF_RATED_POWER_W: entry.options.get(CONF_RATED_POWER_W, 1000),
             CONF_DUTY_BASE: entry.options.get(CONF_DUTY_BASE, DEFAULT_DUTY_BASE),
             CONF_DUTY_SLOPE: entry.options.get(CONF_DUTY_SLOPE, DEFAULT_DUTY_SLOPE),
+            CONF_IDLE_OFFSET_K: entry.options.get(CONF_IDLE_OFFSET_K, DEFAULT_IDLE_OFFSET_K),
+            CONF_SETTLE_MIN: entry.options.get(CONF_SETTLE_MIN, DEFAULT_SETTLE_MIN),
         }
         return self.async_show_form(
             step_id="init", data_schema=self.add_suggested_values_to_schema(schema, current), errors=errors

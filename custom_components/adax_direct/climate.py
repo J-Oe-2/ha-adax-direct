@@ -91,7 +91,7 @@ class AdaxDirectClimate(AdaxDirectEntity, ClimateEntity, RestoreEntity):
 
     @property
     def current_temperature(self) -> float:
-        return self.coordinator.data.curr_c100 / 100
+        return self.coordinator.data.display_c100 / 100
 
     @property
     def target_temperature(self) -> float | None:

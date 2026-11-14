@@ -91,6 +91,8 @@ It runs the integration's config flow over the REST API and prints the entry id 
 | Rated power (W) | setup + options | 100–3000 | 1000 | measured wattage at your mains (a Clea H 10 KWT measured 965–998 W at 230 V, see Measured behaviour) |
 | Duty at target (`duty_base`) | options | 0–1 | 0.23 | share of time on when room = target |
 | Duty per K below target (`duty_slope`) | options | 0–5 | 0.30 | added on-share per K the room is below target |
+| Idle offset (K) (`idle_offset_k`) | options | −5 to 5 | 1.5 (0 = off) | added to the reading once the heater has not heated for the settle time; measure it idle against a reference thermometer |
+| Settle time (min) (`settle_min`) | options | 0–180 | 45 | wait after the heater last heated before the offset applies; after a restart or a reload the wait starts again |
 
 Fixed behaviours: poll every 60 s; entities become unavailable only after 5 failed polls in a row; only 0 (off) or 5–35 °C is ever written; energy is booked from successful polls only, at most 180 s per interval.
 

@@ -63,7 +63,8 @@ async def test_options_flow_changes_host(hass: HomeAssistant, mock_heater, setup
     await hass.async_block_till_done()
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.data["host"] == "192.0.2.11"
-    assert entry.options == {"rated_power_w": 1200, "duty_base": 0.2, "duty_slope": 0.4}
+    assert entry.options == {"rated_power_w": 1200, "duty_base": 0.2, "duty_slope": 0.4,
+                             "idle_offset_k": 1.5, "settle_min": 45}
     registry = er.async_get(hass)
     unique_ids = {e.unique_id for e in er.async_entries_for_config_entry(registry, entry.entry_id)}
     assert unique_ids == {

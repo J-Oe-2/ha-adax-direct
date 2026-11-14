@@ -46,7 +46,16 @@ class AdaxTemperature(AdaxDirectEntity, SensorEntity):
 
     @property
     def native_value(self) -> float:
-        return self.coordinator.data.curr_c100 / 100
+        return self.coordinator.data.display_c100 / 100
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        data = self.coordinator.data
+        return {
+            "raw_temperature": data.curr_c100 / 100,
+            "idle_offset_active": data.offset_active,
+            "last_heated": data.last_heated.isoformat(),
+        }
 
 
 class AdaxPower(AdaxDirectEntity, SensorEntity):

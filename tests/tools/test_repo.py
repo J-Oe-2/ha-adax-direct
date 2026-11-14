@@ -11,7 +11,7 @@ import adax_direct_tools
 ROOT = Path(__file__).resolve().parents[2]
 INTEGRATION = ROOT / "custom_components" / "adax_direct"
 FULL_NAME = "Jo" + "sef Oe" + "hmen"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 README_HEADINGS = [
     "# Adax Direct (unofficial) — set up Adax heaters from your laptop",
@@ -137,12 +137,15 @@ def test_workflows():
 
 
 def test_git_history_single_commit():
-    assert git("rev-list", "--all", "--count").strip() == "1"
-    refs = set(git("for-each-ref", "--format=%(refname)").split())
-    assert refs == {"refs/heads/main", "refs/tags/v0.1.0"}
-    assert git("log", "-1", "--format=%B", "main").rstrip("\n") == (
+    roots = git("rev-list", "--max-parents=0", "--all").split()
+    assert len(roots) == 1                                  # no private history before the public root
+    root_message = (
         "Initial public release v0.1.0\n\n"
         "adax_direct integration, adax-direct setup tool, tests, CI and upstream suggestions.\n\n"
         "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
     )
+    assert git("log", "-1", "--format=%B", roots[0]).rstrip("\n") == root_message
+    assert git("rev-parse", "v0.1.0^{commit}").strip() == roots[0]
     assert git("for-each-ref", "refs/tags/v0.1.0", "--format=%(contents)").strip() == "v0.1.0"
+    if git("tag", "--list", "v0.2.0").strip():
+        assert git("for-each-ref", "refs/tags/v0.2.0", "--format=%(contents)").strip() == "v0.2.0"

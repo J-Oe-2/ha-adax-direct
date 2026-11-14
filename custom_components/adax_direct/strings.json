@@ -29,7 +29,9 @@
           "token": "Access token",
           "rated_power_w": "Rated power (W)",
           "duty_base": "Duty at target (0-1, share of time on when room = target)",
-          "duty_slope": "Duty per K below target (0-5)"
+          "duty_slope": "Duty per K below target (0-5)",
+          "idle_offset_k": "Idle offset (K, -5 to 5; 0 = off): added to the reading once the heater has not heated for the settle time",
+          "settle_min": "Settle time (min, 0-180) after the heater last heated"
         }
       }
     },
