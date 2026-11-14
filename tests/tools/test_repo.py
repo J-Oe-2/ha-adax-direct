@@ -57,6 +57,7 @@ def test_manifest_strings_versions():
     assert manifest == {
         "domain": "adax_direct",
         "name": "Adax Direct (unofficial)",
+        "categories": ["climate.thermostats_heating"],
         "codeowners": ["@J-Oe-2"],
         "config_flow": True,
         "documentation": "https://github.com/J-Oe-2/ha-adax-direct",
